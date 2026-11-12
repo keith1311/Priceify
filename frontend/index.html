@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en" class="root-html">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Priceify</title>
+    <link rel="icon" type="image/png" href="uploads/priceify_icon.png">
+    <!-- FontAwesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="main.css" />
+    <script src="index.js" defer></script>
+  </head>
+  <body>
+    <!-- Header Navigation -->
+    <header>
+      <div class="container-custom">
+        <div class="header-content">
+          <!-- Logo -->
+          <div class="brand-logo">
+            <div class="brand-icon">
+              <i class="fa-solid fa-dollar-sign"></i>
+            </div>
+            <div>
+              <span class="brand-title"> Priceify </span>
+            </div>
+          </div>
+
+          <!-- Navigation Links -->
+          <nav class="nav-links">
+            <a href="#" class="active">
+              <i class="fa-solid fa-list-check"></i> Active Trackers
+            </a>
+            <a href="#">Watchlist</a>
+            <a href="#">
+              Alert Logs
+              <span
+              class="notification-badge"
+              id="alertLogBadge"
+                >0 new</span
+              >
+            </a>
+            <a href="#">Settings</a>
+          </nav>
+
+          <!-- Header Actions -->
+          <div class="header-actions">
+            <!-- Quick Stats Display -->
+            <div class="quick-stats">
+              <div>
+                <span
+                  style="
+                    color: var(--text-muted);
+                    display: block;
+                    font-size: 9px;
+                  "
+                  >Tracked Items</span
+                >
+                <span id="statTotalItems" style="font-weight: 700"
+                  >3 Products</span
+                >
+              </div>
+
+            <!-- Dark Mode Toggle -->
+            <button
+              onclick="toggleDarkMode()"
+              class="icon-btn"
+              aria-label="Toggle Theme"
+            >
+              <i class="fa-solid fa-moon dark-hidden" id="moonIcon"></i>
+              <i
+                class="fa-solid fa-sun light-hidden"
+                id="sunIcon"
+                style="display: none"
+              ></i>
+            </button>
+
+            <!-- Account Profile Button -->
+            <div class="user-avatar">
+              <img
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120"
+                alt="User"
+              />
+            </div>
+          </div>
+        </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main>
+      <!-- HERO LINK PASTE & AUTO-TRACKER SECTION -->
+      <section class="hero-section">
+        <div class="hero-glow"></div>
+
+        <div class="hero-header">
+          <h1 class="hero-title">
+            Paste any product link. We track price drops 24/7.
+          </h1>
+          <p class="hero-desc">
+            Paste product links from Shopee, Lazada, TikTok Shop, TaoBao, PinDuoDuo & Amazon. Set your desired alert target and channel.
+          </p>
+        </div>
+
+        <!-- URL Tracker Form Card -->
+        <form
+          id="addTrackerForm"
+          onsubmit="handleCreateTracker(event)"
+          class="tracker-form"
+        >
+          <!-- Input Row 1: URL + Platform Detector Badge -->
+          <div class="input-wrapper">
+            <div class="input-icon-left">
+              <i class="fa-solid fa-link"></i>
+            </div>
+            <input
+              type="url"
+              id="productUrlInput"
+              required
+              oninput="detectPlatform(this.value)"
+              placeholder="Paste Shopee, Lazada, or TikTok Shop product URL here..."
+              class="url-input"
+            />
+          </div>
+
+          <!-- Input Row 2: Target Price, Currency, Frequency & Channel Controls -->
+          <div class="form-grid">
+            <!-- Target Price Input -->
+            <div class="form-group">
+              <label>Target Alert Price</label>
+              <div class="price-input-wrapper">
+                <span class="price-prefix">RM</span>
+                <input
+                  type="number"
+                  id="targetPriceInput"
+                  step="0.5"
+                  required
+                  placeholder="0.00"
+                  class="form-control price-input"
+                />
+              </div>
+            </div>
+
+            <!-- Check Frequency -->
+            <div class="form-group">
+              <label>Check Frequency</label>
+              <select id="frequencySelect" class="form-control">
+                <option value="6h" selected>Every 6 Hours </option>
+                <option value="3h" >Every 3 Hours (Currently Unavailable) </option>
+              </select>
+            </div>
+
+            <!-- Alert Channel Selector -->
+            <div class="form-group">
+              <label>Send Alerts To</label>
+              <div class="channel-selector">
+                <button
+                  type="button"
+                  onclick="selectChannel('telegram')"
+                  id="chan-telegram"
+                  class="channel-btn active"
+                  title="Telegram Bot"
+                >
+                  <i class="fa-brands fa-telegram"></i>
+                </button>
+                <button
+                  type="button"
+                  onclick="selectChannel('whatsapp')"
+                  id="chan-whatsapp"
+                  class="channel-btn"
+                  title="WhatsApp"
+                >
+                  <i class="fa-brands fa-whatsapp"></i>
+                </button>
+                <button
+                  type="button"
+                  onclick="selectChannel('email')"
+                  id="chan-email"
+                  class="channel-btn"
+                  title="Email"
+                >
+                  <i class="fa-regular fa-envelope"></i>
+                </button>
+                <button
+                  type="button"
+                  onclick="selectChannel('discord')"
+                  id="chan-discord"
+                  class="channel-btn"
+                  title="Discord"
+                >
+                  <i class="fa-brands fa-discord"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div
+              class="form-group"
+              style="display: flex; align-items: flex-end"
+            >
+              <button type="submit" id="btnSubmitTracker" class="btn-submit">
+                <i class="fa-solid fa-plus"></i> Start Tracking
+              </button>
+            </div>
+          </div>
+
+          <!-- Supported Platforms Quick Tags -->
+          <div class="supported-tags">
+            <span class="label">Supported Platforms:</span>
+            <span class="tag"
+              ><i
+                class="fa-solid fa-bag-shopping"
+                style="color: var(--shopee)"
+              ></i>
+              Shopee</span
+            >
+            <span class="tag"
+              ><i
+                class="fa-solid fa-cart-shopping"
+                style="color: var(--lazada)"
+              ></i>
+              Lazada</span
+            >
+            <span class="tag"
+              ><i class="fa-brands fa-tiktok"></i> TikTok Shop</span
+            >
+            <span class="tag"
+              ><i class="fa-solid fa-store" style="color: var(--taobao)"></i>
+              TaoBao</span
+            >
+            <span class="tag"
+              ><i class="fa-solid fa-truck" style="color: var(--pinduoduo)"></i>
+              PinDuoDuo</span>
+            <span class="tag"
+              ><i class="fa-brands fa-amazon" style="color: var(--amazon)"></i>
+              Amazon</span
+            >
+          </div>
+        </form>
+      </section>
+
+      <!-- ACTIVE TRACKED ITEMS DASHBOARD -->
+      <section class="dashboard-section">
+        <!-- Dashboard Controls Header -->
+        <div class="dashboard-header">
+          <div class="dashboard-title">
+            <h2>
+              <i
+                class="fa-solid fa-satellite-dish"
+                style="color: var(--primary)"
+              ></i>
+              Active Tracked Products
+            </h2>
+            <p>Monitoring real-time prices & instant notification triggers</p>
+          </div>
+
+          <!-- Filter / Search Row -->
+          <div class="dashboard-controls">
+            <div class="search-box-wrapper">
+              <input
+                type="text"
+                id="searchTrackerInput"
+                onkeyup="filterTrackers()"
+                placeholder="Filter items..."
+              />
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <select
+              id="platformFilter"
+              onchange="filterTrackers()"
+              class="filter-select"
+            >
+              <option value="all">All Platforms</option>
+              <option value="Shopee">Shopee</option>
+              <option value="Lazada">Lazada</option>
+              <option value="TikTok Shop">TikTok Shop</option>
+              <option value="TaoBao">TaoBao</option>
+              <option value="PinDuoDuo">PinDuoDuo</option>
+                <option value="Amazon">Amazon</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Tracked Items Grid Container -->
+        <div id="trackerGrid" class="tracker-grid">
+          <!-- Dynamic Item Cards Rendered Here -->
+        </div>
+      </section>
+    </main>
+  </body>
+
+    <!-- Notification Toast Popup -->
+  <div id="toast" class="toast-container">
+    <div class="toast-body">
+      <i
+        id="toastIcon"
+        class="fa-solid fa-circle-check"
+        style="color: var(--primary); font-size: 1rem"
+      ></i>
+      <span id="toastMsg">Tracker created successfully!</span>
+    </div>
+  </div>
+</div>
+</html>
